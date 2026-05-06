@@ -16,6 +16,7 @@ jobs:
           java-version: '17'
       - name: Give permission to build
         run: chmod +x gradlew
+        working-directory: demo
       - name: Building spring app
         run: ./gradlew build
       - name: Building Docker container
