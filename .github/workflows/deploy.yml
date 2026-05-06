@@ -19,5 +19,7 @@ jobs:
         working-directory: demo
       - name: Building spring app
         run: ./gradlew build
+        working-directory: demo
       - name: Building Docker container
         run: docker build -t app-devops-java -f Dockerfile .
+        working-directory: demo
