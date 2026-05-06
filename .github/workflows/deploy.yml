@@ -21,5 +21,19 @@ jobs:
         run: ./gradlew build
         working-directory: demo
       - name: Building Docker container
-        run: docker build -t app-devops-java -f Dockerfile .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/app-devops-java:latest -f Dockerfile .
         working-directory: demo
+      - name: Logging in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Pushing Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/app-devops-java:latest
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: springApp
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/app-devops-java:latest
+
