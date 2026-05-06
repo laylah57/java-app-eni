@@ -1,0 +1,22 @@
+name: Deploy to Azure
+on:
+  push:
+    branches:
+      - toAzure
+jobs:
+  deployApp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reading repository
+        uses: actions/checkout@v4
+      - name: Installing JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Give permission to build
+        run: chmod +x gradlew
+      - name: Building spring app
+        run: ./gradlew build
+      - name: Building Docker container
+        run: docker build -t app-devops-java -f Dockerfile .
